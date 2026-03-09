@@ -18,8 +18,6 @@ export default async function handler(req:VercelRequest , res: VercelResponse) {
 
     if (req.method === "POST"){
 
-        res.status(200).json({status:"ok"});
-
         try{
 
             console.log("WEBHOOK BODY:", JSON.stringify(req.body));
@@ -29,9 +27,12 @@ export default async function handler(req:VercelRequest , res: VercelResponse) {
 
             console.log("ROOT:", JSON.stringify(root));
 
-            if (!root || root.type !== "text") return;
+            if (!root || root.type !== "text"){
+                return res.status(200).json({status:"ok"});
+            }
+
             const number = root.from;
-            const message = root.text.body.trim().toUpperCase(); 
+            const message = root.text.body.trim().toUpperCase();
 
             console.log("MESSAGE:", message);
 
@@ -47,7 +48,7 @@ export default async function handler(req:VercelRequest , res: VercelResponse) {
                     console.log("Night row:", JSON.stringify(matched));
                 }
 
-                if (matched !==null) {
+                if (matched !== null) {
                     console.log("Updating row:", matched.rowIndex);
                     await updateRow(
                         matched.rowIndex,
@@ -65,10 +66,11 @@ export default async function handler(req:VercelRequest , res: VercelResponse) {
                 }
             }
 
-            
         } catch (err){
             console.error(err);
-        }        
+        }
+
+        return res.status(200).json({status:"ok"});
     }
     
 }
