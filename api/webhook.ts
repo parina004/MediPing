@@ -21,10 +21,14 @@ export default async function handler(req:VercelRequest , res: VercelResponse) {
         res.status(200).json({status:"ok"});
 
         try{
-            
+
+            console.log("WEBHOOK BODY:", JSON.stringify(req.body));
+
             // ?. is called optional chaining -> "if this exists, go deeper, otherwise give me undefined"
             const root = req.body?.entry?.[0].changes?.[0].value?.messages?.[0];
-            
+
+            console.log("ROOT:", JSON.stringify(root));
+
             if (!root || root.type !== "text") return;
             const number = root.from;
             const message = root.text.body.trim().toUpperCase(); 
