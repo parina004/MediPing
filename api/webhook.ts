@@ -33,14 +33,22 @@ export default async function handler(req:VercelRequest , res: VercelResponse) {
             const number = root.from;
             const message = root.text.body.trim().toUpperCase(); 
 
+            console.log("MESSAGE:", message);
+
             if (message === "YES"){
-                
+
+                console.log("Looking for today's row...");
+
                 let matched = await findTodayRow("morning");
+                console.log("Morning row:", JSON.stringify(matched));
+
                 if (!matched || matched.row[5] !== "Pending"){
                     matched = await findTodayRow("night");
+                    console.log("Night row:", JSON.stringify(matched));
                 }
 
                 if (matched !==null) {
+                    console.log("Updating row:", matched.rowIndex);
                     await updateRow(
                         matched.rowIndex,
                         {
@@ -50,7 +58,10 @@ export default async function handler(req:VercelRequest , res: VercelResponse) {
                     );
 
                     const response = "Great! Your dose has been logged. Have a great day <3";
-                    await sendMessage(number,response);
+                    await sendMessage(number, response);
+                    console.log("Done!");
+                } else {
+                    console.log("No matching Pending row found.");
                 }
             }
 
