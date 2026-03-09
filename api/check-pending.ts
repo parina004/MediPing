@@ -22,7 +22,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     
     const recipient = process.env.RECIPIENT_PHONE_NUMBER!;
-    const medicine = process.env.MEDICINE_NAME!;
+    const medicine = dose === "morning"
+        ? process.env.MORNING_MEDICINES!
+        : process.env.NIGHT_MEDICINES!;
     
     const today = await findTodayRow(dose);
     if (!(today === null || today.row[5]!== "Pending" || today.row[6] === "true")){

@@ -23,8 +23,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const recipient = process.env.RECIPIENT_PHONE_NUMBER!;
-  const medicine = process.env.MEDICINE_NAME!;
-  const now = new Date().toISOString(); // "2025-01-15T08:00:00.000Z"
+  const medicine = dose === "morning"
+    ? process.env.MORNING_MEDICINES!
+    : process.env.NIGHT_MEDICINES!;
+  const now = new Date().toISOString();
 
   await sendMessage(recipient, MESSAGES[dose](medicine));
 
