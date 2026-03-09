@@ -1,0 +1,59 @@
+import type { VercelRequest, VercelResponse } from "@vercel/node"
+import { sendMessage } from "../lib/whatsapp"
+import { findTodayRow, updateRow } from "../lib/sheets"
+
+export default async function handler(req:VercelRequest , res: VercelResponse) {
+
+    if (req.method === "GET"){
+
+        const mode = req.query["hub.mode"];
+        const verify_token = req.query["hub.verify_token"];
+        const challenge = req.query["hub.challenge"];
+
+        if (mode === "subscribe" && verify_token === process.env.WEBHOOK_VERIFY_TOKEN){
+        return res.status(200).send(challenge);
+        }
+        return res.status(403).json({error:"Forbidden"});
+    }
+
+    if (req.method === "POST"){
+
+        res.status(200).json({status:"ok"});
+
+        try{
+            
+            // ?. is called optional chaining -> "if this exists, go deeper, otherwise give me undefined"
+            const root = req.body?.entry?.[0].changes?.[0].value?.messages?.[0];
+            
+            if (!root || root.type !== "text") return;
+            const number = root.from;
+            const message = root.text.body.trim().toUpperCase(); 
+
+            if (message === "YES"){
+                
+                let matched = await findTodayRow("morning");
+                if (!matched || matched.row[5] !== "Pending"){
+                    matched = await findTodayRow("night");
+                }
+
+                if (matched !==null) {
+                    await updateRow(
+                        matched.rowIndex,
+                        {
+                            status:"Taken",
+                            response_time: new Date().toISOString(),
+                        }
+                    );
+
+                    const response = "Great! Your dose has been logged. Have a great day <3";
+                    await sendMessage(number,response);
+                }
+            }
+
+            
+        } catch (err){
+            console.error(err);
+        }        
+    }
+    
+}

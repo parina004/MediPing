@@ -1,0 +1,5 @@
+infodoc.txt
+.env
+node_modules/
+.vercel/
+dist/
