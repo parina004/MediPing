@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "WhatsApp medicine reminder tracker",
   "private": true,
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "vercel dev",
     "build": "tsc --noEmit",
