@@ -5,9 +5,9 @@ import { findTodayRow, updateRow } from "../lib/sheets";
 
 const MESSAGES = {
     morning:(medicine:string) => 
-        `Reminder!! You have not taken your morning medicine: ${medicine}. Reply YES once you do!`,
+        `Reminder!! You have not taken your morning medicine: ${medicine}. reply yes once you take it!`,
     night:(medicine:string) => 
-        `Reminder!! You have not taken your night medicine: ${medicine}. Reply YES once you do!`,
+        `Reminder!! You have not taken your night medicine: ${medicine}. reply yes once you take it!`,
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

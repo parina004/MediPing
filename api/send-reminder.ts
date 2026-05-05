@@ -4,9 +4,9 @@ import { appendRow } from "../lib/sheets";
 
 const MESSAGES = {
   morning: (medicine: string) =>
-    `Good morning! Time for your morning medicine: ${medicine}. Reply YES once taken.`,
+    `Good morning! Time for your morning medicine: ${medicine}. reply yes once you take it!`,
   night: (medicine: string) =>
-    `Good evening! Time for your night medicine: ${medicine}. Reply YES once taken.`,
+    `Good evening! Time for your night medicine: ${medicine}. reply yes once you take it!`,
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
